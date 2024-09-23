@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { EmployeesService } from './employees.service';
-import { CreateEmployeeDto } from './dto/create-employee.dto';
-import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { Prisma } from '@prisma/client';
+import { SkipThrottle , Throttle} from '@nestjs/throttler';
+import { throttle } from 'rxjs';
 
+// @SkipThrottle()
 @Controller('employees')
 export class EmployeesController {
   constructor(private readonly employeesService: EmployeesService) {}
@@ -12,12 +13,12 @@ export class EmployeesController {
   create(@Body() createEmployeeDto: Prisma.EmployeeCreateInput) {
     return this.employeesService.create(createEmployeeDto);
   }
-
+  // @SkipThrottle({default: false})
   @Get()
   findAll(@Query('role') role?: 'admin' | 'user') {
     return this.employeesService.findAll(role);
   }
-
+  // @Throttle({short: {ttl: 1000, limit: 1}})
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.employeesService.findOne(+id);
