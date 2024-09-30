@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpadateUserDto } from './Dto/updateUser.dto';
 import { CreateUserDto } from './Dto/createUser.dto';
+import { UserResponseDto } from './Dto/userResponse.dto';
 
 @Injectable()
 export class UsersService {
@@ -33,25 +34,25 @@ export class UsersService {
     findAll(){
         return this.users;
     }
-    findOne(id: number){
+    findOne(id: number): UserResponseDto{
         const user: CreateUserDto = this.users.find(user=> user.id === id);
         if (!user) throw new NotFoundException(`user with id :${id} not found`);
-        return user;
+        return new UserResponseDto(user);
     };
-    createOne(user: CreateUserDto){
+    createOne(user: CreateUserDto): UserResponseDto{
         this.users.push({
             id: this.users.length + 1,
             ...user
         });
-        return user
+        return new UserResponseDto(user);
     }
-    updateOne(id: number, user: UpadateUserDto){
+    updateOne(id: number, user: UpadateUserDto): UserResponseDto{
         const idx = this.users.findIndex(user=>user.id === id);
         this.users[idx] ={
             ...this.users[idx],
             ...user
         }
-        return this.users[idx];
+        return new UserResponseDto(this.users[idx]);
     }
     deleteOne(id: number){
         this.users = this.users.filter(user=> user.id !== id);

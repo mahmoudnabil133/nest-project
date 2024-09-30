@@ -15,11 +15,11 @@ export class UsersController {
         return this.userService.findOne(id)
     }
     @Post()
-    create(@Body(ValidationPipe) newUser: CreateUserDto){
+    create(@Body() newUser: CreateUserDto){
         return this.userService.createOne(newUser);
     }
     @Patch(':id')
-    updateUser(@Param('id', ParseIntPipe) id: number, @Body(ValidationPipe) updatedUser: UpadateUserDto){
+    updateUser(@Param('id', ParseIntPipe) id: number, @Body() updatedUser: UpadateUserDto){
         return this.userService.updateOne(id, updatedUser);
     }
     @Delete(':id')

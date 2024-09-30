@@ -1,11 +1,11 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { DatabaseModule } from './database/database.module';
 import { EmployeesModule } from './employees/employees.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
-import { APP_GUARD } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [UsersModule,
@@ -25,6 +25,9 @@ import { APP_GUARD } from '@nestjs/core';
   providers: [AppService, {
     provide: APP_GUARD,
     useClass: ThrottlerGuard
+  },{
+    provide: APP_INTERCEPTOR,
+    useClass: ClassSerializerInterceptor
   }],
 })
 export class AppModule {}
