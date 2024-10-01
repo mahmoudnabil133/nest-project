@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './Dto/createUser.dto';
 import { UpadateUserDto } from './Dto/updateUser.dto';
@@ -6,8 +6,11 @@ import { UpadateUserDto } from './Dto/updateUser.dto';
 export class UsersController {
     constructor( private readonly userService: UsersService){}
     @Get()
-    getUsers(@Query() query: {}){
-        console.log(query);
+    async getUsers(@Query() query: {}, @Req() req: Request): Promise<any>{
+        console.log(req.body);
+        await new Promise((resolve, reject)=>{
+            setTimeout(resolve, 2000)
+        });
         return this.userService.findAll();
     }
     @Get(':id')
