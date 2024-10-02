@@ -1,6 +1,7 @@
 import { Exclude, Expose } from "class-transformer";
 
 export class UserResponseDto {
+    id: number;
     name: string;
     
     @Exclude()
@@ -21,4 +22,8 @@ export class UserResponseDto {
     constructor(partial: Partial<UserResponseDto>){
         Object.assign(this, partial);
     }
+}
+enum user{
+    user,
+    admin
 }

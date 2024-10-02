@@ -11,22 +11,22 @@ export class UsersController {
         await new Promise((resolve, reject)=>{
             setTimeout(resolve, 2000)
         });
-        return this.userService.findAll();
+        return await this.userService.findAll();
     }
     @Get(':id')
-    getOneUser(@Param('id', ParseIntPipe) id: number){
-        return this.userService.findOne(id)
+    async getOneUser(@Param('id', ParseIntPipe) id: number){
+        return await this.userService.findOne(id)
     }
     @Post()
-    create(@Body() newUser: CreateUserDto){
-        return this.userService.createOne(newUser);
+    async create(@Body() newUser: CreateUserDto){
+        return await this.userService.createOne(newUser);
     }
     @Patch(':id')
-    updateUser(@Param('id', ParseIntPipe) id: number, @Body() updatedUser: UpadateUserDto){
-        return this.userService.updateOne(id, updatedUser);
+    async updateUser(@Param('id', ParseIntPipe) id: number, @Body() updatedUser: UpadateUserDto){
+        return await this.userService.updateOne(id, updatedUser);
     }
     @Delete(':id')
-    deleteUser(@Param('id', ParseIntPipe) id: number){
-        return this.userService.deleteOne(id);
+    async deleteUser(@Param('id', ParseIntPipe) id: number){
+        return await this.userService.deleteOne(id);
     }
 }

@@ -6,6 +6,8 @@ import { DatabaseModule } from './database/database.module';
 import { EmployeesModule } from './employees/employees.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from './users/users.entity';
 
 @Module({
   imports: [UsersModule,
@@ -19,7 +21,17 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
       name: "long",
       ttl: 60000,
       limit: 100
-    }])
+    }]),
+    TypeOrmModule.forRoot({
+      type: 'mysql',
+      host: 'localhost',
+      port: 3306,
+      username: 'root',
+      password: '3mod4od123321',
+      database: 'nest',
+      entities: [User],
+      synchronize: true,
+    })
   ],
   controllers: [AppController],
   providers: [AppService, {
