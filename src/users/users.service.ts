@@ -23,6 +23,9 @@ export class UsersService {
         
         return new UserResponseDto(user);
     };
+    async findByEmail(email: string): Promise<any> {
+        return await this.userRepository.findOneBy({ email })
+    }
     async createOne(user: CreateUserDto): Promise<UserResponseDto>{
         const hashedPass = await bcrypt.hash(user.password, 12);
         let newUser = this.userRepository.create({...user, password: hashedPass});
