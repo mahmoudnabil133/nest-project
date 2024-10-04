@@ -1,7 +1,10 @@
 import { OnModuleInit } from "@nestjs/common";
 import { io, Socket } from "socket.io-client";
 
-
+// flow 
+//1) SocketClient or postman sends meesage
+//2) Gateway receives the message and emits it to all connected clients
+//3) SocketClient or Postman listens to the event and logs the message
 export class SocketClient implements OnModuleInit {
     public socketClient: Socket;
 
