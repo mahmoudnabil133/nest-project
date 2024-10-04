@@ -9,6 +9,8 @@ import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
 import { AuthModule } from './auth/auth.module';
+import { GateWay } from './gateway/events.gateway';
+import { SocketClient } from './socket/socket-client';
 
 @Module({
   imports: [UsersModule,
@@ -42,6 +44,6 @@ import { AuthModule } from './auth/auth.module';
   },{
     provide: APP_INTERCEPTOR,
     useClass: ClassSerializerInterceptor
-  }],
+  }, GateWay, SocketClient],
 })
 export class AppModule {}

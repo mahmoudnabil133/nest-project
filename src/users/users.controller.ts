@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Patch, Post, Query, Req, UseGuards, ValidationPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './Dto/createUser.dto';
 import { UpadateUserDto } from './Dto/updateUser.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 @Controller('users')
 export class UsersController {
     constructor( private readonly userService: UsersService){}
@@ -13,6 +14,8 @@ export class UsersController {
         });
         return await this.userService.findAll();
     }
+    
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async getOneUser(@Param('id', ParseIntPipe) id: number){
         return await this.userService.findOne(id)

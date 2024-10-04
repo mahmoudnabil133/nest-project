@@ -1,7 +1,8 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Request, UseGuards, Session } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
+// import { Session } from 'inspector/promises';
 
 @Controller('auth')
 export class AuthController {
@@ -18,5 +19,12 @@ export class AuthController {
     @Get('profile')
     getProfile(@Request() req: any){
         return req.user;
+    }
+
+    @Get('')
+    getMySession(@Session() session: Record<string, any>){
+        console.log(session.id);
+        session.authenticated = true;
+        return session;
     }
 }

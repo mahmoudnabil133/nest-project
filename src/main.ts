@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import { ValidationPipe } from '@nestjs/common';
 import { WrapDataInterceptor } from './common/interceptors/wrap-data/wrap-data.interceptor';
 import { TimeoutInterceptor} from './common/interceptors/timeout/timeout.interceptor';
+import * as session from 'express-session';
 
 dotenv.config();
 
@@ -19,6 +20,14 @@ async function bootstrap() {
       },
     })
   );
+  app.use(session({
+    secret: 'my-secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+      maxAge: 10000
+    }
+  }))
   app.useGlobalInterceptors( new WrapDataInterceptor(),
   new TimeoutInterceptor()
 );
