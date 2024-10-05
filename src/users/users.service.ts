@@ -16,7 +16,7 @@ export class UsersService {
         @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>
     ){}
     async findAll(): Promise<UserResponseDto[]>{
-        const users : User[]= await this.userRepository.find({ relations: ['profile'] });
+        const users : User[]= await this.userRepository.find({ relations: ['profile', 'posts'] });
         return users.map(user => new UserResponseDto(user));
     }
     async findOne(id: number): Promise<UserResponseDto>{

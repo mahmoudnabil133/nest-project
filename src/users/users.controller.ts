@@ -17,7 +17,7 @@ export class UsersController {
         return await this.userService.findAll();
     }
     
-    @UseGuards(JwtAuthGuard)
+    // @UseGuards(JwtAuthGuard)
     @Get(':id')
     async getOneUser(@Param('id', ParseIntPipe) id: number){
         return await this.userService.findOne(id)

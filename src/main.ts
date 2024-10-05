@@ -1,10 +1,11 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as dotenv from 'dotenv';
-import { ValidationPipe } from '@nestjs/common';
+import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { WrapDataInterceptor } from './common/interceptors/wrap-data/wrap-data.interceptor';
 import { TimeoutInterceptor} from './common/interceptors/timeout/timeout.interceptor';
 import * as session from 'express-session';
+import { AllExceptionsFilter } from './common/interceptors/filters/all-exception-filters';
 
 dotenv.config();
 
@@ -12,14 +13,22 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true,
+      whitelist: true, // strips unallowed properties
+      forbidNonWhitelisted: true, // throws error if unexpected properties are found
       transform: true,
-      forbidNonWhitelisted: true,
       transformOptions: {
         enableImplicitConversion: true,
       },
-    })
+      exceptionFactory: (errors) => {
+        const errorMessages = errors.map(error => ({
+          property: error.property,
+          constraints: error.constraints,
+        }));
+        return new BadRequestException(errorMessages);
+      },
+    }),
   );
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.use(session({
     secret: 'my-secret',
     resave: false,
@@ -28,9 +37,9 @@ async function bootstrap() {
       maxAge: 10000
     }
   }))
-  app.useGlobalInterceptors( new WrapDataInterceptor(),
-  new TimeoutInterceptor()
-);
+//   app.useGlobalInterceptors( new WrapDataInterceptor(),
+//   new TimeoutInterceptor()
+// );
   app.setGlobalPrefix('api')
   app.enableCors()
   await app.listen(3000);

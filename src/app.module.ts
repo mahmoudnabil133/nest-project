@@ -8,10 +8,14 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/users.entity';
+// provide them if you want to use them
 import { AuthModule } from './auth/auth.module';
 import { GateWay } from './gateway/events.gateway';
 import { SocketClient } from './socket/socket-client';
 import { Profile } from './profile/profile.entity';
+
+import { Post } from './posts/posts.entity';
+import { PostsModule } from './posts/posts.module';
 
 @Module({
   imports: [UsersModule,
@@ -33,10 +37,11 @@ import { Profile } from './profile/profile.entity';
       username: 'root',
       password: '3mod4od123321',
       database: 'nest',
-      entities: [User, Profile],
+      entities: [User, Profile, Post],
       synchronize: true,
     }),
-    AuthModule
+    AuthModule,
+    PostsModule
   ],
   controllers: [AppController],
   providers: [AppService, {
@@ -45,6 +50,6 @@ import { Profile } from './profile/profile.entity';
   },{
     provide: APP_INTERCEPTOR,
     useClass: ClassSerializerInterceptor
-  }, GateWay, SocketClient],
+  }],
 })
 export class AppModule {}
