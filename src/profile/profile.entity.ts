@@ -12,6 +12,6 @@ export class Profile {
     lastName: string;
 
     @Column()
-    dob: Date;
+    dob: String;
 
 }

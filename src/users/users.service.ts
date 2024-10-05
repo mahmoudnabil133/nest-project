@@ -16,7 +16,7 @@ export class UsersService {
         @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>
     ){}
     async findAll(): Promise<UserResponseDto[]>{
-        const users : User[]= await this.userRepository.find();
+        const users : User[]= await this.userRepository.find({ relations: ['profile'] });
         return users.map(user => new UserResponseDto(user));
     }
     async findOne(id: number): Promise<UserResponseDto>{
@@ -54,9 +54,10 @@ export class UsersService {
     async createUserProfile(id: number, profile: CreateUserProfileDto): Promise<User>{
         let user = await this.userRepository.findOneBy({ id });
         if (!user) throw new NotFoundException(`user with id :${id} not found`);
+        console.log(profile)
         const newProfile = this.profileRepository.create(profile);
         const savedProfile = await this.profileRepository.save(newProfile);
-
+        console.log(savedProfile);
         user.profile = savedProfile;
 
         return await this.userRepository.save(user);

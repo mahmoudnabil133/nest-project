@@ -10,7 +10,6 @@ export class CreateUserProfileDto {
     @MinLength(4)
     lastName: string;
     
-    @Type(() => Date)
-    @IsDate()
-    dob: Date;
+    @IsString()
+    dob: String;
 }
