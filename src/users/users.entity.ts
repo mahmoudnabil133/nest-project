@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Profile } from "src/profile/profile.entity";
+import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -19,7 +20,9 @@ export class User {
     @Column()
     role: string;
 
-
+    @OneToOne(()=> Profile)
+    @JoinColumn()
+    profile: Profile;
 }
 
 enum user {

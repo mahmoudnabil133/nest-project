@@ -1,4 +1,4 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpStatus, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { UpadateUserDto } from './Dto/updateUser.dto';
 import { CreateUserDto } from './Dto/createUser.dto';
 import { UserResponseDto } from './Dto/userResponse.dto';
@@ -6,12 +6,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { CreateUserProfileDto } from './Dto/createUserProfile.dto';
+import { Profile } from 'src/profile/profile.entity';
 
 @Injectable()
 export class UsersService {
     constructor(
-        @InjectRepository(User) 
-        private readonly userRepository: Repository<User>
+        @InjectRepository(User)    private readonly userRepository: Repository<User>,
+        @InjectRepository(Profile) private readonly profileRepository: Repository<Profile>
     ){}
     async findAll(): Promise<UserResponseDto[]>{
         const users : User[]= await this.userRepository.find();
@@ -47,5 +49,16 @@ export class UsersService {
     async deleteOne(id: number) {
         const res = await this.userRepository.delete(id);
         if (res.affected === 0) throw new NotFoundException(`user with id :${id} not found`);
+    }
+
+    async createUserProfile(id: number, profile: CreateUserProfileDto): Promise<User>{
+        let user = await this.userRepository.findOneBy({ id });
+        if (!user) throw new NotFoundException(`user with id :${id} not found`);
+        const newProfile = this.profileRepository.create(profile);
+        const savedProfile = await this.profileRepository.save(newProfile);
+
+        user.profile = savedProfile;
+
+        return await this.userRepository.save(user);
     }
 }

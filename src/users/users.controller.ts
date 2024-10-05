@@ -3,6 +3,8 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './Dto/createUser.dto';
 import { UpadateUserDto } from './Dto/updateUser.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { CreateUserProfileDto } from './Dto/createUserProfile.dto';
+import { AnyARecord } from 'dns';
 @Controller('users')
 export class UsersController {
     constructor( private readonly userService: UsersService){}
@@ -31,5 +33,10 @@ export class UsersController {
     @Delete(':id')
     async deleteUser(@Param('id', ParseIntPipe) id: number){
         return await this.userService.deleteOne(id);
+    }
+
+    @Post(`:id/profile`)
+    async createUserProfile(@Param('id', ParseIntPipe) id: number, @Body() profile: any){
+        return await this.userService.createUserProfile(id, profile);
     }
 }

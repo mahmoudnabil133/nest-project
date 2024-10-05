@@ -11,6 +11,7 @@ import { User } from './users/users.entity';
 import { AuthModule } from './auth/auth.module';
 import { GateWay } from './gateway/events.gateway';
 import { SocketClient } from './socket/socket-client';
+import { Profile } from './profile/profile.entity';
 
 @Module({
   imports: [UsersModule,
@@ -32,7 +33,7 @@ import { SocketClient } from './socket/socket-client';
       username: 'root',
       password: '3mod4od123321',
       database: 'nest',
-      entities: [User],
+      entities: [User, Profile],
       synchronize: true,
     }),
     AuthModule
