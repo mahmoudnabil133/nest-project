@@ -5,9 +5,15 @@ import { UpadateUserDto } from './Dto/updateUser.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserProfileDto } from './Dto/createUserProfile.dto';
 import { AnyARecord } from 'dns';
+import { AuthGuard } from 'src/guards/auth.guard';
+import { RolesGuard } from 'src/guards/roles.guard';
+import { Roles } from 'src/guards/roles.decorator';
 @Controller('users')
 export class UsersController {
     constructor( private readonly userService: UsersService){}
+    
+    @Roles(['admin'])
+    @UseGuards(AuthGuard, RolesGuard)
     @Get()
     async getUsers(@Query() query: {}, @Req() req: Request): Promise<any>{
         console.log(req.body);
